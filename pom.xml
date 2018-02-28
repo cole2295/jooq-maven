@@ -117,7 +117,7 @@
                             <validationAnnotations>true</validationAnnotations>
                         </generate>
                         <target>
-                            <packageName>me.ele.atfcapi.tools.db</packageName>
+                            <packageName>com.jooq.generate</packageName>
                             <directory>src/main/java</directory>
                         </target>
                     </generator>
