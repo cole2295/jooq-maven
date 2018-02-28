@@ -1,2 +1,1 @@
 # jooq-maven
-# jooq-maven
