@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.yufeng</groupId>
+    <artifactId>jooq-maven</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <mysql-jdbc-driver>5.1.34</mysql-jdbc-driver>
+        <vapor-version>1.0.5-SNAPSHOT</vapor-version>
+        <jooq-version>3.7.0</jooq-version>
+        <javax-validation-version>1.1.0.Final</javax-validation-version>
+        <spring-boot-version>1.5.6.RELEASE</spring-boot-version>
+    </properties>
+    <!--依赖包声明 实际没有导入-->
+    <!--<dependencyManagement>-->
+        <dependencies>
+
+            <!--Spring Boot start-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jooq</artifactId>
+                <version>${spring-boot-version}</version>
+            </dependency>
+            <!--Spring Boot end-->
+            <!--JOOQ start-->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>${jooq-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-meta</artifactId>
+                <version>${jooq-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen</artifactId>
+                <version>${jooq-version}</version>
+            </dependency>
+            <!--JOOQ end-->
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-jdbc-driver}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax-validation-version}</version>
+            </dependency>
+        </dependencies>
+    <!--</dependencyManagement>-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq-version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-mysql</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- jdbc配置 -->
+                    <jdbc>
+                        <driver>com.mysql.jdbc.Driver</driver>
+                        <!-- 这里写你自己数据库的连接和数据库名 -->
+                        <url>jdbc:mysql://127.0.0.1:3306/atfcapi</url>
+                        <!--<url>jdbc:mysql://127.0.0.1:3306/数据库名</url>-->
+                        <!-- 这里写你自己数据库的用户名 -->
+                        <user>root</user>
+                        <!-- 这里写你自己数据库的密码 -->
+                        <password>123456</password>
+                        <!--<password>******</password>-->
+                    </jdbc>
+                    <!-- 代码生成配置 -->
+                    <generator>
+                        <name>org.jooq.util.JavaGenerator</name>
+                        <strategy>
+                            <name>com.yufeng.strategy.MyStrategy</name>
+                        </strategy>
+                        <database>
+                            <name>org.jooq.util.mysql.MySQLDatabase</name>
+                            <excludes>QRTZ_.*|jooq-maven\..*\.is_delete</excludes>
+                            <includeExcludeColumns>true</includeExcludeColumns>
+                            <inputSchema>atfcapi</inputSchema>
+                        </database>
+                        <generate>
+                            <deprecated>false</deprecated>
+                            <daos>true</daos>
+                            <interfaces>true</interfaces>
+                            <validationAnnotations>true</validationAnnotations>
+                        </generate>
+                        <target>
+                            <packageName>me.ele.atfcapi.tools.db</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
